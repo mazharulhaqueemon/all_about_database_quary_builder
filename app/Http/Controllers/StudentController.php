@@ -10,15 +10,15 @@ class StudentController extends Controller
 {
     public function showStudents()
     {
-        // $students = DB::table('students')->get(); // get all students from the students table
+        $students = DB::table('students')->get(); // get all students from the students table
         //  $students = DB::table('students')->where('age','>','29')->get(); // show students whose age is greater than 29
 
-        $students = DB::table('students')
-                        ->where([
-                            ['age', '>',18], // multiple conditions can be passed as an array
-                            ['name', 'like', 'c%'] // show students whose age is greater than 18 and name contains 'c'
+        // $students = DB::table('students')
+                        // ->where([
+                        //     ['age', '>',18], // multiple conditions can be passed as an array
+                        //     ['name', 'like', 'c%'] // show students whose age is greater than 18 and name contains 'c'
 
-                        ])->get();
+                        // ])->get();
 
         return view('allusers', ['data' => $students]);
     }
@@ -31,26 +31,57 @@ class StudentController extends Controller
       return view('singleuser', ['data' => $students]);
     }
 
-
-
-
-
-    // FOR API
-
-    public function showStudentAsApi()
+    public function addStudent()
     {
-        // $students = DB::table('students')->where('age', '>', 29)->get();
-        $students = DB::table('students')
-                       ->select('name','age')
-                       ->get();  // show only  name and age
-        return response()->json($students);
+        $user = DB::table('students')
+        ->insertOrIgnore([   // insertOrIgnore will not insert the data if the email already exists
+            'name' => 'Reza Bakthiar',
+            'email' =>'raju@gmil.com',
+            'age' => 30,
+            'city' => 'Dhaka',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+       if($user){
+              return '<h1>Student Added Successfully</h1>';
+       }
+       else{
+              return '<h1>email already exist</h1>';
+       }
+
+
     }
 
-    public function singleStudentAsApi(string $id)
+    public function updateStudent()
     {
-        $student = DB::table('students')->where('id', $id)->get();
+        $student = DB::table('students')
+        ->where( 'id',1)
+        ->update([
+            'name' => 'Sakib Al Hasan',
+            'email' => 'sh75@gmail.com',
 
-        return response()->json($student);
+        ]);
+        return '<h1>Student Updated Successfully</h1>';
     }
+
+    public function deleteStudent(string $id)
+    {
+        $student = DB::table('students')
+        ->where('id', $id)
+        ->delete();
+
+        if($student){
+            return redirect()->route('students.show');
+        }
+    }
+
+
+
+
+
+
+
+
 
 }
