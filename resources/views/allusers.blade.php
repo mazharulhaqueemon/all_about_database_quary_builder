@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-6">
                 <h1> All users List</h1>
-                <a href="" class="btn btn-success mb-3">Add New User</a>
+                <a href="/newstudent" class="btn btn-success mb-3">Add New User</a>
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -35,7 +35,7 @@
                         <td>{{ $student->city}}</td>
                         <td><a href=" {{route('students.single',$student->id)}} " class="btn btn-primary btn-sm" >View</a> </td>
                         <td><a href=" {{route('students.delete',$student->id)}} " class="btn btn-danger btn-sm" >Delete</a> </td>
-                        <td><a href="  " class="btn btn-warning btn-sm" >Update</a> </td>
+                        <td><a href=" {{ route('students.update.page',$student->id) }} " class="btn btn-warning btn-sm" >Update</a> </td>
                     </tr>
                 @endforeach
                 </table>

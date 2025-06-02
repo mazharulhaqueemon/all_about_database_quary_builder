@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Http\Requests\StudentRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,20 +31,20 @@ class StudentController extends Controller
       return view('singleuser', ['data' => $students]);
     }
 
-    public function addStudent()
+    public function addStudent(StudentRequest $request)
     {
         $user = DB::table('students')
-        ->insertOrIgnore([   // insertOrIgnore will not insert the data if the email already exists
-            'name' => 'Reza Bakthiar',
-            'email' =>'raju@gmil.com',
-            'age' => 30,
-            'city' => 'Dhaka',
+        ->insert([   // insertOrIgnore will not insert the data if the email already exists
+            'name' => $request->name,
+            'email' =>$request->email,
+            'age' => $request->age,
+            'city' => $request->city,
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
        if($user){
-              return '<h1>Student Added Successfully</h1>';
+             return redirect()->route('students.show');
        }
        else{
               return '<h1>email already exist</h1>';
@@ -53,16 +53,28 @@ class StudentController extends Controller
 
     }
 
-    public function updateStudent()
+    public function updatePage(string $id)
     {
+        // $student = DB::table('students')->where('id', $id)->get();
+        $student =DB::table('students')->find($id); // find method will return a single record
+        return view('update', ['data' => $student]);
+    }
+
+    public function updateStudent(Request $request, $id)
+    {
+
         $student = DB::table('students')
-        ->where( 'id',1)
+        ->where( 'id',$id)
         ->update([
-            'name' => 'Sakib Al Hasan',
-            'email' => 'sh75@gmail.com',
+            'name' => $request->name,
+            'email' =>$request->email,
+            'age' => $request->age,
+            'city' => $request->city,
+            'created_at' => now(),
+            'updated_at' => now()
 
         ]);
-        return '<h1>Student Updated Successfully</h1>';
+         return redirect()->route('students.show');
     }
 
     public function deleteStudent(string $id)
